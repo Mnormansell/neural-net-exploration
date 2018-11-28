@@ -1,10 +1,13 @@
+# CODE TO EASILY COLLECT DATA SET
+# ALL CREDIT TO https://www.pyimagesearch.com/2018/04/09/how-to-quickly-build-a-deep-learning-image-dataset/
+
 # import the necessary packages
 from requests import exceptions
 import argparse
 import requests
 import cv2
 import os
-
+import tensorflow as tf
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
 ap.add_argument("-q", "--query", required=True,
