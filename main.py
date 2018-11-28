@@ -1,4 +1,10 @@
 #Here we go
-if __name__ == "__main__":
-    print('Chester')
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow 
+import input_data
 
+dataset = input_data.imageArray('images')
+
+print(dataset[0][0])

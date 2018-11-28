@@ -1,3 +1,7 @@
 {
-    "python.jediEnabled": false
+    "python.jediEnabled": false,
+    "python.pythonPath": "E:\\python\\Anaconda\\envs\\ccn\\python.exe",
+    "python.linting.pylintEnabled": true,
+    "workbench.colorCustomizations": {},
+    "terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe"
 }
