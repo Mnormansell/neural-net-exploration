@@ -1,37 +1,58 @@
 import glob
 import numpy as np
 import os
-from scipy import misc
+import cv2
 
 # takes image directory and createsr 2D array of immages
 def imageArray(root):
   
-  classes = os.listdir(root)
-  
+  #create list of directories in root
+  classes = []
+  for dir in os.listdir(root):
+    classes.append(os.path.join(root, dir))
+
   dataset = []
   # iterate through each directory
-  for dir in classes:
+  count = 0
+  file_paths = []
 
+  for file in os.listdir(classes[0]):
+    if count < 20:
+      file_paths.append(os.path.join(classes[0], file))
+      count += 1
+    else:
+      break
+
+  images = []
+  for path in file_paths:
+      images.append(cv2.imread(path))
+
+  images = np.asarray(images)
+  images = images / 255
+  
+  return images
+
+  #for dir in classes:
     # iterate through each file in current directory and add it to a file path list
-    file_paths = []
-    for file in os.listdir(dir):
-      file_paths.append(os.path.join(dir, file))
+    #file_paths = []
+    #for file in os.listdir(dir):
+      #file_paths.append(os.path.join(dir, file))
     
     # iterate through those files and decode them
-    images = []
-    for path in file_paths:
-      images.append(misc.imread(path))
+    #images = []
+    #for path in file_paths:
+      #images.append(misc.imread(path))
 
     # convert image list to array
-    images = np.asarray(images)
+    #images = np.asarray(images)
     # scale
-    images = images / 225 
+    #images = images / 225 
 
     # add the array to dataset 
-    dataset.append(images)
+    #dataset.append(images)
 
   # convert data set into an array
-  dataset = np.asarray(dataset)
+  #dataset = np.asarray(dataset)
 
   return dataset
 
