@@ -9,7 +9,9 @@ from keras.layers import Convolution2D
 
 
 dataset = input_data.imageArray('images')
-print(dataset[0])
+imgplot = plt.imshow(dataset[0][0])
+plt.show()
+# print(dataset[0])
 
 classes = os.listdir('images')
 num_classes = len(classes)
