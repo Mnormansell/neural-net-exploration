@@ -12,7 +12,6 @@ def imageArray(root):
   for dir in os.listdir(root):
     classes.append(os.path.join(root, dir))
   
-  count = 0
   for dir in classes:
   # iterate through each directory
     file_paths = []
@@ -21,12 +20,11 @@ def imageArray(root):
       file_paths.append(os.path.join(dir, file))
 
     for path in file_paths:
-      if count < 25:
-        #Create a tuple of the pixel and it's label
-        pixels = cv2.imread(path)
-        height, width = pixels.shape[:2]
-        print('file %s | height: %s width: %s' % (path, str(height), str(width)))
-        dataset.append( pixels )
+      #Create a tuple of the pixel and it's label
+      pixels = cv2.imread(path)
+      height, width = pixels.shape[:2]
+      print('file %s | height: %s width: %s' % (path, str(height), str(width)))
+      dataset.append( pixels )
   
   return dataset
     
