@@ -2,6 +2,7 @@ import numpy as np
 import os
 from PIL import Image
 from resizeimage import resizeimage
+from random import shuffle
 
 # takes image directory and createsr 2D array of immages
 def imageArray(root):
@@ -12,7 +13,7 @@ def imageArray(root):
   for dir in os.listdir(root):
     classes.append(os.path.join(root, dir))
 
-  for dir in classes:
+  for counter, dir in enumerate(classes):
   # iterate through each directory
     file_paths = []
 
@@ -28,6 +29,9 @@ def imageArray(root):
       height, width = pixels.shape[:2]
       print('file %s | height: %s width: %s' % (path, str(height), str(width)))
       # Append a tuple of image, label (label - 1 as counts start at zero)
-      dataset.append( (pixels, path) )
+      dataset.append( (pixels, int(classes[counter][-3::]) -1) )
+
+  # shuffle the data
+  shuffle(dataset)
 
   return dataset
