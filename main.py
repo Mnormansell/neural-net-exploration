@@ -7,7 +7,5 @@ import input_data
 
 dataset = input_data.imageArray('images')
 
-print(dataset)
-
 #classes = os.listdir('images')
 #num_classes = len(classes)

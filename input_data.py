@@ -11,7 +11,6 @@ def imageArray(root):
   for dir in os.listdir(root):
     classes.append(os.path.join(root, dir))
 
-  dataset = []
   # iterate through each directory
   count = 0
   file_paths = []
@@ -20,12 +19,16 @@ def imageArray(root):
     if count < 20:
       file_paths.append(os.path.join(classes[0], file))
       count += 1
-    else:
+    else: 
       break
 
   images = []
   for path in file_paths:
-      images.append(cv2.imread(path))
+    #Create a tuple of the pixel and it's label
+    pixels = cv2.imread(path)
+    height, width = cv2.shape[:2]
+    print('height: %s' % str(height) + ' width: %s' %str(width))
+    images.append( pixels ) 
 
   images = np.asarray(images)
   images = images / 255
@@ -53,7 +56,4 @@ def imageArray(root):
 
   # convert data set into an array
   #dataset = np.asarray(dataset)
-
-  return dataset
-
 
