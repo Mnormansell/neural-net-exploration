@@ -1,6 +1,7 @@
 import numpy as np
 import os
-import cv2
+from PIL import Image
+from resizeimage import resizeimage
 
 # takes image directory and createsr 2D array of immages
 def imageArray(root):
@@ -19,38 +20,14 @@ def imageArray(root):
       file_paths.append(os.path.join(dir, file))
 
     for path in file_paths:
-      #Create a tuple of the pixel and it's label
-      proto = cv2.imread(path)
-      pixels = cv2.cvtColor(proto, cv2.COLOR_BGR2RGB)
+      # Open and resize image to height 200 (width scalled accordingt to ratio)
+      img = Image.open(path)
+      img = resizeimage.resize_height(img, 200)
+      # Convert image to array of pixels
+      pixels = np.array(img)
       height, width = pixels.shape[:2]
       print('file %s | height: %s width: %s' % (path, str(height), str(width)))
       # Append a tuple of image, label (label - 1 as counts start at zero)
       dataset.append( (pixels, path) )
 
   return dataset
-
-
-
-
-
-  #for dir in classes:
-    # iterate through each file in current directory and add it to a file path list
-    #file_paths = []
-    #for file in os.listdir(dir):
-      #file_paths.append(os.path.join(dir, file))
-
-    # iterate through those files and decode them
-    #images = []
-    #for path in file_paths:
-      #images.append(misc.imread(path))
-
-    # convert image list to array
-    #images = np.asarray(images)
-    # scale
-    #images = images / 225
-
-    # add the array to dataset
-    #dataset.append(images)
-
-  # convert data set into an array
-  #dataset = np.asarray(dataset)
