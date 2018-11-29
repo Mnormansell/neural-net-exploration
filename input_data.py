@@ -23,7 +23,8 @@ def imageArray(root):
       pixels = cv2.imread(path)
       height, width = pixels.shape[:2]
       print('file %s | height: %s width: %s' % (path, str(height), str(width)))
-      dataset.append( pixels )
+      # Append a tuple of image, label (label - 1 as counts start at zero)
+      dataset.append( (pixels, path) )
   
   return dataset
     
