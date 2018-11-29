@@ -1,1 +1,1 @@
-# nueral-net-exploration
+# neural-net-exploration
