@@ -12,8 +12,7 @@ def imageArray(root):
     classes.append(os.path.join(root, dir))
   
   #add label index
-  label = 0
-  for dir in classes:
+  for counter, dir in enumerate(classes):
   # iterate through each directory
     file_paths = []
 
@@ -24,8 +23,6 @@ def imageArray(root):
       #Create a tuple of the pixel and it's label
       pixels = cv2.imread(path, 1)
       # Append a tuple of image, label (label - 1 as counts start at zero)
-      dataset.append( (pixels, label))
-    
-    label += 1
+      dataset.append( (pixels, int(classes[counter][-3::]) - 1) )
 
   return dataset
