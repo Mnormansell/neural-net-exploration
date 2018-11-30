@@ -5,39 +5,51 @@ from resizeimage import resizeimage
 from random import shuffle
 from random import seed
 
-# takes image directory and createsr 2D array of immages
-def imageArray(root):
-  #Create the overall data set
-  dataset = []
-  labels = []
-  #create list of directories in root
+# Returns a list of the file paths in one image
+def getPaths(root):
+  paths = []
   classes = []
+  # Creates list of directories in root
   for dir in os.listdir(root):
     classes.append(os.path.join(root, dir))
-
-  for counter, dir in enumerate(classes):
-  # iterate through each directory
-    file_paths = []
-
+  
+  # Iterate through those directories
+  for dir in classes:
+    # Add the file paths to the files array
+    files = []
     for file in os.listdir(dir):
-      file_paths.append(os.path.join(dir, file))
+      files.append(os.path.join(dir, file))
+    # Creates the 2D array
+    paths.append(files)
+  
+  return paths
 
-    for path in file_paths:
-      # Open and resize image to height 200 (width scalled accordingt to ratio)
-      img = Image.open(path)
+# takes paths array or images (2d) 
+def imageArray(paths, root=None):
+  # Due to optional parameter, file_path will default to path but will use the root if provided
+  file_paths = []
+  if root is None:
+    file_paths = paths
+  else:
+    try:
+      file_paths = getPaths(root)
+    except:
+      print('Error reading directories')
+  
+  # Like above, the code iterates through a 2D array and converts the images to an array of pixels
+  pixels = []
+  for dir in file_paths:
+
+    for file in dir:
+      img = Image.open(file)
+      # Resize
       img = resizeimage.resize_height(img, 200)
       # Convert image to array of pixels
-      pixels = np.array(img)
-      height, width = pixels.shape[:2]
-      print('file %s | height: %s width: %s' % (path, str(height), str(width)))
+      imgArray = np.array(img)
+      height, width = imgArray.shape[:2]
+      print('file %s | height: %s width: %s' % (file, str(height), str(width)))
       # Append a tuple of image, label (label - 1 as counts start at zero)
-      dataset.append(pixels)
-      labels.append((classes[counter][-3::]))
+      pixels.append(imgArray)
+  
+  return pixels
 
-  # shuffle the data and set SEED so we have same results for collaboration
-  SEED = 20
-  seed(SEED)
-  shuffle(dataset)
-  shuffle(labels)
-
-  return dataset, labels

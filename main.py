@@ -20,10 +20,12 @@ LABELS = {
     '007' : 'Wartortle',
     '008' : 'Blastoise',
 }
-dataset, labels = input_data.imageArray('images')
+file_paths = input_data.getPaths('images')
+dataset = input_data.imageArray(file_paths)
+print(dataset[0])
+
 
 img = dataset[0]
-print(LABELS[labels[0]])
 plt.imshow(img, cmap = 'gray', interpolation = 'bicubic')
 plt.xticks([]), plt.yticks([])  # to hide tick values on X and Y axis
 plt.show()
