@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow
 import input_data
+import cnn
 from keras.models import Sequential
 from keras.layers import Convolution2D
 

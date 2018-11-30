@@ -32,7 +32,7 @@ classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = [
 
 # Training classifier on training dataset
 # With more epochs, there will be higher accuracy
-# 10 epochs will take 1-2 hours to train
+# 10 epochs with 8,000 steps/enoch will take 1-2 hours to train
 classifier.fit_generator(
         training_set,
         steps_per_epoch = 500,
