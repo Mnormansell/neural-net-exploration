@@ -31,11 +31,13 @@ def imageArray(root):
       height, width = pixels.shape[:2]
       print('file %s | height: %s width: %s' % (path, str(height), str(width)))
       # Append a tuple of image, label (label - 1 as counts start at zero)
-      dataset.append( (pixels, int(classes[counter][-3::]) -1) )
+      dataset.append(pixels)
+      labels.append((classes[counter][-3::]))
 
   # shuffle the data and set SEED so we have same results for collaboration
   SEED = 20
   seed(SEED)
   shuffle(dataset)
+  shuffle(labels)
 
-  return dataset
+  return dataset, labels
