@@ -3,11 +3,13 @@ import os
 from PIL import Image
 from resizeimage import resizeimage
 from random import shuffle
+from random import seed
 
 # takes image directory and createsr 2D array of immages
 def imageArray(root):
   #Create the overall data set
   dataset = []
+  labels = []
   #create list of directories in root
   classes = []
   for dir in os.listdir(root):
@@ -31,7 +33,9 @@ def imageArray(root):
       # Append a tuple of image, label (label - 1 as counts start at zero)
       dataset.append( (pixels, int(classes[counter][-3::]) -1) )
 
-  # shuffle the data
+  # shuffle the data and set SEED so we have same results for collaboration
+  SEED = 20
+  seed(SEED)
   shuffle(dataset)
 
   return dataset

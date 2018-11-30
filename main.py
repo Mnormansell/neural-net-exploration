@@ -4,6 +4,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import input_data
+<<<<<<< HEAD
+=======
+#import cnn
+#from keras.models import Sequential
+#from keras.layers import Convolution2D
+>>>>>>> 924eacdab6a47b918060527d8e2d18fd45902d71
 
 #Dictionary for labels, unfortunately labels are one less than the pokedex entry
 labels = {
