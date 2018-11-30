@@ -33,6 +33,10 @@ classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = [
 # Training classifier on training dataset
 # With more epochs, there will be higher accuracy
 # 10 epochs with 8,000 steps/enoch will take 1-2 hours to train
+
+# TODO: split shuffle somehow
+# TODO: we need to feed in the path to a directory containing our training data
+
 classifier.fit_generator(
         training_set,
         steps_per_epoch = 500,

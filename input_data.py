@@ -34,7 +34,7 @@ def imageArray(root):
 
   # shuffle the data and set SEED so we have same results for collaboration
   SEED = 20
-  random.seed(SEED)
-  random.shuffle(dataset)
+  seed(SEED)
+  shuffle(dataset)
 
   return dataset
