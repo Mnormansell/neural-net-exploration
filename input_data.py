@@ -3,6 +3,7 @@ import os
 from PIL import Image
 from resizeimage import resizeimage
 from random import shuffle
+from random import seed
 
 # takes image directory and createsr 2D array of immages
 def imageArray(root):
@@ -31,7 +32,9 @@ def imageArray(root):
       # Append a tuple of image, label (label - 1 as counts start at zero)
       dataset.append( (pixels, int(classes[counter][-3::]) -1) )
 
-  # shuffle the data
-  shuffle(dataset)
+  # shuffle the data and set SEED so we have same results for collaboration
+  SEED = 20
+  random.seed(SEED)
+  random.shuffle(dataset)
 
   return dataset
