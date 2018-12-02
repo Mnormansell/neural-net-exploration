@@ -22,10 +22,9 @@ LABELS = {
 }
 file_paths = input_data.getPaths('images')
 dataset = input_data.imageArray(file_paths)
-print(dataset[0])
 
-
-img = dataset[0]
+print(len(dataset))
+img = dataset[3][36]
 plt.imshow(img, cmap = 'gray', interpolation = 'bicubic')
 plt.xticks([]), plt.yticks([])  # to hide tick values on X and Y axis
 plt.show()

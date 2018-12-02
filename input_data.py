@@ -28,6 +28,7 @@ def getPaths(root):
 def imageArray(paths, root=None):
   # Due to optional parameter, file_path will default to path but will use the root if provided
   file_paths = []
+  dataset = []
   if root is None:
     file_paths = paths
   else:
@@ -37,9 +38,10 @@ def imageArray(paths, root=None):
       print('Error reading directories')
   
   # Like above, the code iterates through a 2D array and converts the images to an array of pixels
-  pixels = []
+  
   for dir in file_paths:
 
+    pixels = []
     for file in dir:
       img = Image.open(file)
       # Resize
@@ -50,6 +52,7 @@ def imageArray(paths, root=None):
       print('file %s | height: %s width: %s' % (file, str(height), str(width)))
       # Append a tuple of image, label (label - 1 as counts start at zero)
       pixels.append(imgArray)
-  
-  return pixels
+
+    dataset.append(pixels)
+  return dataset
 
