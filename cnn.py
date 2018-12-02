@@ -1,15 +1,24 @@
 # Convolutional Neural Network
 # Source: https://medium.com/nybles/create-your-first-image-recognition-classifier-using-cnn-keras-and-tensorflow-backend-6eaab98d14dd?fbclid=IwAR0v9M0oxzaZ5divb6NkslKdNdHrWaM594g0RfRGPEujaZiDQRdlgDMWMGg
 
-
+import tensorflow as tf
 # Importing Keras libraries and packages
 from keras.models import Sequential
-from keras.layers import Convolution2D
-from keras.layers import MaxPooling2D
-from keras.layers import Flatten
-from keras.layers import Dense
+from keras.layers import Convolution2D, Dense, Dropout, Activation, Flatten, Convolution2D, MaxPooling2D
+
 from IPython.display import display
 from PIL import Image
+import pickle
+
+# Im following this https://www.youtube.com/watch?v=WvoLTXIjBYU
+
+# Data from preprocessing
+pickle_in = open("X.pickle", "rb")
+X = pickle.load(pickle_in)
+
+pickle_in = open("Y.pickle", "rb")
+Y = pickle.load(pickle_in)
+
 
 # Initialize the CNN
 classifier = Sequential()
