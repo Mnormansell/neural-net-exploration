@@ -5,12 +5,18 @@ import tensorflow as tf
 # Importing Keras libraries and packages
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Convolution2D, Dense, Dropout, Activation, Flatten, MaxPooling2D
+from tensorflow.keras.callbacks import TensorBoard
 
 from IPython.display import display
 from PIL import Image
 import pickle
+import time
 
 # Im following this https://www.youtube.com/watch?v=WvoLTXIjBYU
+
+NAME = "Pokedex-%f" % time.time()
+
+tensorboard = TensorBoard(log_dir='logs/%s' % NAME)
 
 # Data from preprocessing
 pickle_in = open("X.pickle", "rb")
@@ -43,15 +49,15 @@ classifier.add(Flatten())
 
 # Step 4 - Full Connection
 classifier.add(Dense(64))
-classifier.add(Dense(1))
+classifier.add(Activation("relu"))
 
-# Step 5 - Activation
+classifier.add(Dense(1))
 classifier.add(Activation("sigmoid"))
 
 # Compiling CNN
 classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
 
-classifier.fit(X, Y, batch_size=32, epochs=3, validation_split=.1)
+classifier.fit(X, Y, batch_size=8, epochs=3, validation_split=.1, callbacks=[tensorboard])
 # Training classifier on training dataset
 # With more epochs, there will be higher accuracy
 # 10 epochs with 8,000 steps/enoch will take 1-2 hours to train
