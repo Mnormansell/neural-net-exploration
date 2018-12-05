@@ -5,12 +5,21 @@ import tensorflow as tf
 # Importing Keras libraries and packages
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Convolution2D, Dense, Dropout, Activation, Flatten, MaxPooling2D
+from keras.layers.normalization import BatchNormalization
+from keras.layers.advanced_activations import LeakyReLU
+from keras.losses import categorical_crossentropy
+from keras.optimizers import Adam
+
 from tensorflow.keras.callbacks import TensorBoard
 
 from IPython.display import display
 from PIL import Image
 import pickle
 import time
+#will remove once i fix data nput
+import numpy as np
+# Imported to split training data, giving a validating test to help accuracy
+from sklearn.model_selection import train_test_split
 
 # Im following this https://www.youtube.com/watch?v=WvoLTXIjBYU
 
@@ -19,48 +28,50 @@ NAME = "Pokedex-%f" % time.time()
 tensorboard = TensorBoard(log_dir='logs/%s' % NAME)
 
 # Data from preprocessing
-pickle_in = open("X.pickle", "rb")
-X = pickle.load(pickle_in)
-# Rescale rgb values
-X = X/255       
+pickle_in = open("train_x.pickle", "rb")
+train_x = pickle.load(pickle_in)
 
-pickle_in = open("Y.pickle", "rb")
-Y = pickle.load(pickle_in)
+pickle_in = open("train_y.pickle", "rb")
+train_y = pickle.load(pickle_in)
+# convert to array
+train_y = np.asarray(train_y)
 
+pickle_in = open("test_x.pickle", "rb")
+test_x = pickle.load(pickle_in)
 
-gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=.333)
-sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
+pickle_in = open("test_y.pickle", "rb")
+test_y = pickle.load(pickle_in)
+test_y = np.asarray(test_y)
 
-# Initialize the CNN
-classifier = Sequential()
+# Splits up the training data
+train_x, valid_x, train_y, valid_y = train_test_split(train_x, train_y, test_size=0.2, random_state=13)
 
-# Step 1 - Convolution
-classifier.add(Convolution2D(64, (3, 3), input_shape = X.shape[1:], activation = 'relu'))
+batch_size = 16
+epochs = 5
+num_classes = 9
 
-# Step 2 - Pooling each 2x2 neighborhood of convoluted image and choosing max
-classifier.add(MaxPooling2D(pool_size = (2,2)))
+# Start of the model
+model = Sequential()
+model.add(Convolution2D(32, kernel_size=(3,3), activation='linear', input_shape=(100,100,3), padding='same'))
+model.add(Activation('relu'))  
+model.add(MaxPooling2D((2, 2), padding='same'))
+model.add(Dropout(0.25))
+model.add(Convolution2D(64, (3, 3), activation='linear',padding='same'))
+model.add(Activation('relu'))  
+model.add(MaxPooling2D(pool_size=(2, 2),padding='same'))
+model.add(Dropout(0.25))
+model.add(Convolution2D(128, (3, 3), activation='linear',padding='same'))
+model.add(Activation('relu'))                   
+model.add(MaxPooling2D(pool_size=(2, 2),padding='same'))
+model.add(Dropout(0.25))
+model.add(Flatten())
+model.add(Dense(128, activation='linear'))
+model.add(Activation('relu'))                  
+model.add(Dropout(0.25))
+model.add(Dense(num_classes, activation='softmax'))
 
-# Repeats steps for another layer
-classifier.add(Convolution2D(64, (3, 3), activation = 'relu'))
-classifier.add(MaxPooling2D(pool_size = (2,2)))
+model.compile(loss=categorical_crossentropy, optimizer='adam', metrics=['accuracy'])
+# uncomment to see model summary
+# model.summary()
 
-# Step 3 - Flattening into 1D Array to be able to input into Neural Net
-classifier.add(Flatten())
-
-# Step 4 - Full Connection
-classifier.add(Dense(64))
-classifier.add(Activation("relu"))
-
-classifier.add(Dense(1))
-classifier.add(Activation("sigmoid"))
-
-# Compiling CNN
-classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
-
-classifier.fit(X, Y, batch_size=8, epochs=3, validation_split=.1, callbacks=[tensorboard])
-# Training classifier on training dataset
-# With more epochs, there will be higher accuracy
-# 10 epochs with 8,000 steps/enoch will take 1-2 hours to train
-
-# TODO: split shuffle somehow
-# TODO: we need to feed in the path to a directory containing our training data
+model_training = model.fit(train_x, train_y, batch_size=batch_size, epochs=epochs, verbose=1, validation_data=(valid_x, valid_y))

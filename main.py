@@ -6,6 +6,7 @@ import tensorflow as tf
 import input_data
 #To save
 import pickle
+
 #import cnn
 #from keras.models import Sequential
 #from keras.layers import Convolution2D
@@ -23,30 +24,30 @@ LABELS = {
     '008' : 'Blastoise',
 }
 
+# Load stored data
+# CODE FROM MAIN IF NEEDED
 file_paths = input_data.getPaths('images')
-training_data = input_data.training_data(file_paths)
+training, testing = input_data.getData(file_paths)
 
-# Splitting up training data
-X = []
-Y = []
-for images, labels in training_data: 
-    X.append(images)
-    Y.append(labels)
+train_x, train_one_hot_list_y, test_x, test_one_hot_list_y = input_data.dataHandling(training, testing)
 
-# Have to convert the image list to an array
-# Arguments of reshape are -1, Img_width, Img_height, num_columns (3 for RBG, 1 for Gray)
-X = np.array(X).reshape(-1, 100, 100, 3)
-
-pickle_out = open("X.pickle", "wb")
-pickle.dump(X, pickle_out)
+pickle_out = open("train_x.pickle", "wb")
+pickle.dump(train_x, pickle_out)
 pickle_out.close()
 
-pickle_out = open("Y.pickle", "wb")
-pickle.dump(Y, pickle_out)
+pickle_out = open("train_y.pickle", "wb")
+pickle.dump(train_one_hot_list_y, pickle_out)
 pickle_out.close()
 
-training_iters = 200
-learning_rate = .001
-batch_size = 128
+
+pickle_out = open("test_x.pickle", "wb")
+pickle.dump(test_x, pickle_out)
+pickle_out.close()
+
+pickle_out = open("test_y.pickle", "wb")
+pickle.dump(test_one_hot_list_y, pickle_out)
+pickle_out.close()
+
+print("Len train x: %s Len train y: %s Len test x: %s Len test y %s " % (len(train_x), len(train_one_hot_list_y), len(test_x), len(test_one_hot_list_y)))
 
 # machine learning bit https://www.datacamp.com/community/tutorials/cnn-tensorflow-python

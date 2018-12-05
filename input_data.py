@@ -25,49 +25,16 @@ def getPaths(root):
   
   return paths
 
-# takes paths array or images (2d) 
-def imageArray(paths, root=None):
-  # Due to optional parameter, file_path will default to path but will use the root if provided
-  file_paths = []
-  dataset = []
-  if root is None:
-    file_paths = paths
-  else:
-    try:
-      file_paths = getPaths(root)
-    except:
-      print('Error reading directories')
-  
-  # Like above, the code iterates through a 2D array and converts the images to an array of pixels
-  
-  for dir in file_paths:
-
-    pixels = []
-    for file in dir:
-      # img = Image.open(file)
-      # Convert image to array of pixels
-      img = cv2.imread(file)
-      b,g,r = cv2.split(img)      
-      rgb_img = cv2.merge([r,g,b]) 
-      
-      # resize image
-      resized = cv2.resize(rgb_img, (100, 100))
-      # Append a tuple of image, label (label - 1 as counts start at zero)
-      pixels.append(resized)
-
-    dataset.append(pixels)
-
-  return dataset
-
-def training_data(paths):
+def getData(paths):
   # Need a counter for the labels
   training_data = []
+  testing_data = []
   for counter, dir in enumerate(paths):
     
     size = len(dir)
 
+    # First 80% is training data
     for x in range( int((size * .8)) ):
-      
       try:
         img = cv2.imread(dir[x])
         b,g,r = cv2.split(img)      
@@ -75,32 +42,71 @@ def training_data(paths):
         resized = cv2.resize(rgb_img, (100, 100))
         # Append a tuple of image, label (label - 1 as counts start at zero)
         training_data.append([resized, counter])
+        
+
       except:
         print('Image Exception')
 
+    # Last 20% is testing data
+    for x in range( int((size * .8)), size ):
+      try:
+        img = cv2.imread(dir[x])
+        b,g,r = cv2.split(img)      
+        rgb_img = cv2.merge([r,g,b]) 
+        resized = cv2.resize(rgb_img, (100, 100))
+        # Append a tuple of image, label (label - 1 as counts start at zero)
+        testing_data.append([resized, counter])
+      except:
+        print('Image Exception')
   shuffle(training_data)
-  return training_data
+  shuffle(testing_data)
+  return training_data, testing_data
 
-# CODE FROM MAIN IF NEEDED
-#file_paths = input_data.getPaths('images')
-#training_data = input_data.training_data(file_paths)
+# This function takes the data from getData, splits up the data into images and labels,
+# converts the images to arrays and reshapes them while converting the y labes to one-hot vectors
+def dataHandling(train, test,  num_classes=9):
+  train_x = []
+  train_y = []
+  for images, labels in train: 
+    train_x.append(images)
+    train_y.append(labels)
 
-# Splitting up training data
-#X = []
-#Y = []
-#for images, labels in training_data: 
-    #X.append(images)
-    #Y.append(labels)
+  test_x = []
+  test_y = []
+  for images, labels in test: 
+    test_x.append(images)
+    test_y.append(labels)
 
-# Have to convert the image list to an array
-# Arguments of reshape are -1, Img_width, Img_height, num_columns (3 for RBG, 1 for Gray)
-#X = np.array(X).reshape(-1, 100, 100, 3)
+  train_x = np.asarray(train_x)
+  test_x = np.asarray(test_x)
+  # Reshape data
+  train_x.reshape(-1, 100, 100, 3)
+  test_x.reshape(-1, 100, 100, 3)
+  train_x.astype('float32')
+  test_x.astype('float32')
+  # Divide pixels by 255 to get range between 0 - 1
+  train_x = train_x / 255
+  test_x = test_x / 255
 
-#pickle_out = open("X.pickle", "wb")
-#pickle.dump(X, pickle_out)
-#pickle_out.close()
-
-#pickle_out = open("Y.pickle", "wb")
-#pickle.dump(Y, pickle_out)
-#pickle_out.close()
+  train_one_hot_list_y = []
+  for label in train_y:
+    one_hot_vector = []
+    for i in range(num_classes):
+      if (i == label):
+        one_hot_vector.append(1)
+      else:
+        one_hot_vector.append(0)
+    train_one_hot_list_y.append(one_hot_vector)
+  
+  test_one_hot_list_y = []
+  for label in test_y:
+    one_hot_vector = []
+    for i in range(num_classes):
+      if (i == label):
+        one_hot_vector.append(1)
+      else:
+        one_hot_vector.append(0)
+    test_one_hot_list_y.append(one_hot_vector)
+  
+  return train_x, train_one_hot_list_y, test_x, test_one_hot_list_y
 
