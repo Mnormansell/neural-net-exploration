@@ -31,20 +31,20 @@ training, testing = input_data.getData(file_paths)
 
 train_x, train_one_hot_list_y, test_x, test_one_hot_list_y = input_data.dataHandling(training, testing)
 
-pickle_out = open("train_x.pickle", "wb")
+pickle_out = open("local_data/train_x.pickle", "wb")
 pickle.dump(train_x, pickle_out)
 pickle_out.close()
 
-pickle_out = open("train_y.pickle", "wb")
+pickle_out = open("local_data/train_y.pickle", "wb")
 pickle.dump(train_one_hot_list_y, pickle_out)
 pickle_out.close()
 
 
-pickle_out = open("test_x.pickle", "wb")
+pickle_out = open("local_data/test_x.pickle", "wb")
 pickle.dump(test_x, pickle_out)
 pickle_out.close()
 
-pickle_out = open("test_y.pickle", "wb")
+pickle_out = open("local_data/test_y.pickle", "wb")
 pickle.dump(test_one_hot_list_y, pickle_out)
 pickle_out.close()
 

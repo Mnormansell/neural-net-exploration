@@ -28,18 +28,18 @@ NAME = "Pokedex-%f" % time.time()
 tensorboard = TensorBoard(log_dir='logs/%s' % NAME)
 
 # Data from preprocessing
-pickle_in = open("train_x.pickle", "rb")
+pickle_in = open("local_data/train_x.pickle", "rb")
 train_x = pickle.load(pickle_in)
 
-pickle_in = open("train_y.pickle", "rb")
+pickle_in = open("local_data/train_y.pickle", "rb")
 train_y = pickle.load(pickle_in)
 # convert to array
 train_y = np.asarray(train_y)
 
-pickle_in = open("test_x.pickle", "rb")
+pickle_in = open("local_data/test_x.pickle", "rb")
 test_x = pickle.load(pickle_in)
 
-pickle_in = open("test_y.pickle", "rb")
+pickle_in = open("local_data/test_y.pickle", "rb")
 test_y = pickle.load(pickle_in)
 test_y = np.asarray(test_y)
 
