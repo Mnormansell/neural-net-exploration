@@ -24,7 +24,7 @@ from sklearn.model_selection import train_test_split
 # Im following this https://www.youtube.com/watch?v=WvoLTXIjBYU
 
 NAME = "Pokedex-%f" % time.time()
-
+print(NAME)
 tensorboard = TensorBoard(log_dir='logs/%s' % NAME)
 
 # Data from preprocessing
@@ -46,27 +46,31 @@ test_y = np.asarray(test_y)
 # Splits up the training data
 train_x, valid_x, train_y, valid_y = train_test_split(train_x, train_y, test_size=0.2, random_state=13)
 
-batch_size = 16
+batch_size = 14
 epochs = 5
 num_classes = 9
 
 # Start of the model
 model = Sequential()
-model.add(Convolution2D(32, kernel_size=(3,3), activation='linear', input_shape=(100,100,3), padding='same'))
-model.add(Activation('relu'))  
+model.add(Convolution2D(64, kernel_size=(3,3), activation='linear', input_shape=(100,100,3), padding='same'))
+model.add(Activation('relu'))
 model.add(MaxPooling2D((2, 2), padding='same'))
 model.add(Dropout(0.25))
-model.add(Convolution2D(64, (3, 3), activation='linear',padding='same'))
-model.add(Activation('relu'))  
+
+model.add(Convolution2D(64, (2, 2), activation='linear',padding='same'))
+model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2),padding='same'))
 model.add(Dropout(0.25))
-model.add(Convolution2D(128, (3, 3), activation='linear',padding='same'))
-model.add(Activation('relu'))                   
+
+model.add(Convolution2D(128, (2, 2), activation='linear',padding='same'))
+model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2),padding='same'))
 model.add(Dropout(0.25))
+
 model.add(Flatten())
+
 model.add(Dense(128, activation='linear'))
-model.add(Activation('relu'))                  
+model.add(Activation('relu'))
 model.add(Dropout(0.25))
 model.add(Dense(num_classes, activation='softmax'))
 
@@ -74,4 +78,4 @@ model.compile(loss=categorical_crossentropy, optimizer='adam', metrics=['accurac
 # uncomment to see model summary
 # model.summary()
 
-model_training = model.fit(train_x, train_y, batch_size=batch_size, epochs=epochs, verbose=1, validation_data=(valid_x, valid_y))
+model_training = model.fit(train_x, train_y, batch_size=batch_size, epochs=epochs, verbose=1, validation_data=(valid_x, valid_y), callbacks=[tensorboard])
